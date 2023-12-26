@@ -1,4 +1,4 @@
 # tdktc-talk
 
 
-Slides for Kotlin DSL talk
+[Slides](https://inponomarev.github.io/dsl-talk/#/) and demo code for Kotlin DSL talk
