@@ -1,0 +1,18 @@
+== TransformationC
+
+Activated by
+
+* `ConditionII`
+
+== TransformationB
+
+Activated by
+
+* `!(ConditionIV)`
+* `((ConditionIII && ConditionIV) || ConditionI)`
+
+== TransformationA
+
+Activated by
+
+* `(ConditionI && !(ConditionIII))`

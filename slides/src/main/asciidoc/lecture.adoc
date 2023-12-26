@@ -1,0 +1,475 @@
+= One Source to Rule Them All: Kotlin DSLs as a Single Source of Truth for Multiple Tasks 
+Ivan Ponomarev
+:revealjs_theme: black
+:revealjs_customtheme: white_course.css
+:revealjs_slideNumber:
+:revealjs_history:
+:revealjs_progress:
+:encoding: UTF-8
+:lang: ru
+include::_doc_general_attributes.adoc[]
+:doctype: article
+:toclevels: 3
+:imagesdir: images
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+:icons: font
+:iconfont-remote!:
+:iconfont-name: font-awesome-4.7.0/css/font-awesome
+:revealjs_mouseWheel: true
+:revealjs_center: false
+:revealjs_transition: none
+:revealjs_width: 1600
+:revealjs_height: 900
+:stem: latexmath
+
+:!figure-caption:
+
+[%notitle]
+== Who am I
+
+[cols="30a,70a"]
+|===
+|image::ivan.jpg[]
+|
+
+Ivan Ponomarev
+
+* Staff Engineer @ Synthesized.io
+* Teaching Java @ Northeastern University London
+
+
+|===
+
+
+
+== DSLs
+Wikipedia:  "*A domain-specific language (DSL)* is a computer language specialized to a particular application domain"
+
+I would say: a language a normal person can create
+
+== DSLs
+
+image::never.jpg[]
+
+== DSLs external and internal
+
+[cols="50a,50a"]
+|===
+|
+[graphviz]
+----
+digraph G {
+graph [ dpi = 180 ];
+node[shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal;
+External->A[style=invis];
+External->B[style=invis];
+Internal->C[style=invis];
+Internal->D[style=invis];
+A[label="Designed\nfrom scratch",style="invis"];
+B[label="Based\non JSON/YAML/XML", style="invis"];
+C[label="Dynamically\ntyped",style=invis];
+D[label="Statically\ntyped", style=invis]
+}
+----
+|
+|===
+
+== Types of external DSLs
+
+[cols="50a,50a"]
+|===
+|
+[graphviz]
+----
+digraph G {
+graph [ dpi = 180 ];
+node[shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[style=invis];
+Internal[];
+Internal->C[style=invis];
+Internal->D[style=invis];
+A[label="Designed\nfrom scratch", fillcolor="#ffffcc"];
+B[label="Based\non JSON/YAML/XML",style=invis];
+C[label="Dynamically\ntyped", style=invis];
+D[label="Statically\ntyped", style=invis]
+}
+----
+|
+Designed from scratch::
+* SQL
+* DOT (GraphViz)
+* PO (`gettext` localization format)
+* HCL (Hashicorp Configuration Language)
+* Gherkin (Cucumber framework's language)
+
+|===
+
+== Types of external DSLs
+
+[cols="50a,50a"]
+|===
+|
+[graphviz]
+----
+digraph G {
+graph [ dpi = 180 ];
+node[shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[style=invis];
+Internal->D[style=invis];
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML", fillcolor="#ffffcc"];
+C[label="Dynamically\ntyped", style=invis];
+D[label="Statically\ntyped", style=invis]
+}
+----
+|
+
+Based on general purpose markup language::
+* **YAML**: OpenAPI, Ansible, GithubActions, k8s definitions...
+* **XML**: XSLT, XSD
+* **JSON**: Vue i18n files 
+
+|===
+
+
+== Internal DSLs
+
+[cols="50a,50a"]
+|===
+|
+
+[graphviz]
+----
+digraph G {
+
+graph [ dpi = 180 ];
+node[shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[style=invis];
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped", fillcolor="#ffffcc"];
+D[label="Statically\ntyped",style=invis];
+}
+----
+
+
+|
+
+Subset of a dynamically typed language::
+
+* *Lisp* (historically first): Emacs Lisp, Symbolic Mathematics etc. 
+* *Ruby*: Rails, RSpec, Chef...
+* *Groovy*: Spock, Ratpack, Grails, Gradle, Jenkinsfile... 
+|===
+
+
+== Internal DSLs
+
+[cols="50a,50a"]
+|===
+|
+
+[graphviz]
+----
+digraph G {
+
+graph [ dpi = 180 ];
+node[shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped", fillcolor="#ffffcc"];
+}
+----
+
+
+|
+
+Subset of a statically typed language::
+
+* *Scala*: Scalatest, Akka HTTP...
+* **Haskell**: Parsec
+* *Kotlin*: Kotlinx.html, Ktor, Gradle,...
+
+|===
+
+
+
+== DSL advantages
+
+. Code can *sometimes* be *written* by a subject-matter expert, not programmer
+. Code can *often* be *read* by a subject-matter expert
+. Code is concise: easy to write/easy to read/easy to support
+
+
+== DSL disadvantages
+
+. Expensive
+.. Requires development on its own
+.. Requires IDE support (or all pros will turn into contras)
+.. Requires a way to embed DSL into application
+. Restrictive
+
+== IDE support 
+
+[cols="50a,50a"]
+|===
+|
+
+[graphviz]
+----
+digraph G {
+
+graph [ dpi = 180 ];
+node[shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped"];
+}
+----
+|
+
+1. No support at all
+2. Rudimentary support 
+3. Partial support (schema-based)
+4. Full support
+
+|===
+
+== Restrictions
+
+[cols="50a,50a"]
+|===
+|
+
+[graphviz]
+----
+digraph G {
+
+graph [ dpi = 180 ];
+node[shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped"];
+}
+----
+
+|
+
+1. You design it yourself
+2. You can be quite flexible
+3. You are restricted by markup synthax
+4. It's complicated
+
+|===
+
+
+== Security Concerns
+
+[cols="50a,50a"]
+|===
+|
+
+[graphviz]
+----
+digraph G {
+
+graph [ dpi = 180 ];
+node[shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped"];
+}
+----
+
+|
+
+1. Is NOT an executable code
+2. Executable code
+
+|===
+
+== Kotlin language features for DSL building 
+
+https://www.jmix.io/cuba-blog/kotlin-dsl-from-theory-to-practice/
+
+[cols="1a,1a,1a"]
+|===
+| Tool	| DSL syntax | General syntax
+| Extension functions
+| 
+[source,kotlin]
+----
+mylist.first(); 
+/* there isn’t first() method
+in mylist collection*/
+----
+| `ListUtlis.first(mylist)`
+| Infix functions
+| `1 to "one"`
+| `1.to("one")`
+| Operators overloading
+| `collection += element`
+| `collection.add(element)`
+| Type aliases
+| `typealias Point = Pair`
+| Creating empty inheritors classes and other duct tapes
+| get/set methods convention
+|===
+
+== Kotlin language features for DSL building (continued)
+
+
+[cols="1a,1a,1a"]
+|===
+| Tool	| DSL syntax | General syntax
+| `map["key"] = "value"`
+| `map.put("key", "value")`
+| Destructuring declaration
+| `val (x, y) = Point(0, 0)`
+| 
+[source,kotlin]
+----
+val p = Point(0, 0); val x = p.first; 
+val y = p.second
+----
+| Lambda out of parentheses
+| `list.forEach { ... }`
+| `list.forEach({...})`
+| Lambda with receiver
+| `Person().apply { name = «John» }`
+| N/A
+| Context control
+| @DslMarker
+| N/A
+|===
+
+== Extension functions
+
+what extension functions are good for
+
+* Extend "chaining" APIs with your own methods
+
+(integration test examples)
+
+* Extend code generated classes
+
+== Lambda with receiver out of parentheses
+
+== Infix functions
+
+* limitations: no infix method call on "this"
+* thus no two word constructs without parentheses
+
+* But there can be a unary operator and parameter without parentheses
+
+== Internal vs External DSLs
+
+Internal DSLs 
+
+pros:
+
+* you already have an IDE, autosuggestions, validity checks (more so for statically typed languages)
+* you can mix it with actual code (? can be a huge drawback)
+cons: 
+* you are restricted by language's synthax (no parenthesis-less passing of parameters to the method)
+
+
+External DSL pros
+
+* you are not restricted by the synthax and can invent anything you want (Hashicorp's own DSL)
+* this is by no means an executable code, so safety
+
+cons
+
+No ready-made IDE for you. Should write your own plugins for IDEs. In the modern world people do not write code withoug IDEs
+
+
+== A midway solution
+
+
+* Yaml/XML/JSon + schema 
+
+** IDEs will help you
+** XML is considered old-fashioned and verbose, JSON is also not human-friendly
+** Yaml is the only option, but as a language it has a lot of problems
+
+*** famous Norwegian problem
+*** You can cut off a part of YAML and still have a valid Yaml
+*** what else? TODO
+
+
+still YAML is the solution
+
+== One source to rule them all
+
+Rules/logic configuration
+
+Documentation generation/visualization
+
+Checking the DSLs correctness (testing the DSL)
+
+
+
+== Thanks for listening!
+
+
+icon:envelope[size=lg] ivan@synthesized.io
+
+icon:twitter[size=lg] @inponomarev

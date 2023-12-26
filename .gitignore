@@ -1,0 +1,23 @@
+target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+#auto-generated images
+src/main/asciidoc/*.png
+/old/
+/*.bat
+.asciidoctor
+slides/src/main/asciidoc/images/diag-*.png
