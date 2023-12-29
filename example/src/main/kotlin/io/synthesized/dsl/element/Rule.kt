@@ -1,4 +1,4 @@
-package io.synthesized.dsls
+package io.synthesized.dsl.element
 
 class Rule(
     val condition: Condition,

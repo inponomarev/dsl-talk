@@ -1,5 +1,12 @@
-package io.synthesized.dsls
+package io.synthesized.dsl.element
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo
+
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.WRAPPER_OBJECT,
+    property = "type",
+)
 sealed interface Transformation: Element {
     fun run()
 }

@@ -1,18 +1,22 @@
-package io.synthesized.dsls
+package io.synthesized.dsl.element
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import kotlin.random.Random
 
-sealed interface Condition: Element {
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.WRAPPER_OBJECT,
+    property = "type",
+)
+fun interface Condition : Element {
     fun met(): Boolean
+
+    //Kotlin bug workaround, see https://youtrack.jetbrains.com/issue/KT-64587
+    override fun visit(visitor: (Element) -> Unit) = super.visit(visitor)
 }
 
-
-
-
-
-
 //////////////////////////////////////////
-sealed interface BasicCondition: Condition
+sealed interface BasicCondition : Condition
 
 object ConditionI : BasicCondition {
     private val status = Random.nextBoolean()
@@ -35,7 +39,10 @@ object ConditionIV : BasicCondition {
 }
 
 //////////////////////////////////////////
-abstract class BinaryCondition(val a: Condition, val b: Condition) : Condition {
+sealed class BinaryCondition(
+    val a: Condition,
+    val b: Condition
+) : Condition {
     override fun visit(visitor: (Element) -> Unit) {
         a.visit(visitor)
         b.visit(visitor)
@@ -55,7 +62,9 @@ class And(a: Condition, b: Condition) : BinaryCondition(a, b) {
     }
 }
 
-class Not(val a: Condition) : Condition {
+class Not(
+    val a: Condition
+) : Condition {
     override fun met(): Boolean {
         return !a.met();
     }

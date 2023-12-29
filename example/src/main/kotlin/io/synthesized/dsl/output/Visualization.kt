@@ -1,5 +1,12 @@
-package io.synthesized.dsls
+package io.synthesized.dsl.output
 
+import io.synthesized.dsl.element.BasicCondition
+import io.synthesized.dsl.element.BinaryCondition
+import io.synthesized.dsl.element.Condition
+import io.synthesized.dsl.element.Element
+import io.synthesized.dsl.element.Not
+import io.synthesized.dsl.element.Rule
+import io.synthesized.dsl.element.Transformation
 import java.awt.Desktop
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -46,7 +53,7 @@ fun main() {
         }
     }
 
-    for (rule in rules) {
+    for (rule in io.synthesized.dsl.rules) {
         rule.visit(::visitor)
     }
     pw.println("  {rank=\"same\";${transformations.map(visited::get).joinToString(";")};}")

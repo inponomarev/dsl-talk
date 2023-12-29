@@ -1,5 +1,12 @@
-package io.synthesized.dsls
+package io.synthesized.dsl
 
+import io.synthesized.dsl.element.And
+import io.synthesized.dsl.element.BasicCondition
+import io.synthesized.dsl.element.Condition
+import io.synthesized.dsl.element.Not
+import io.synthesized.dsl.element.Or
+import io.synthesized.dsl.element.Rule
+import io.synthesized.dsl.output.describe
 import org.junit.jupiter.api.Test
 import kotlin.reflect.KClass
 import kotlin.test.fail

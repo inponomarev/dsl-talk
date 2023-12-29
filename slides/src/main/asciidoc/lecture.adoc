@@ -259,10 +259,19 @@ External->B[];
 Internal[];
 Internal->C[];
 Internal->D[]
-A[label="Designed\nfrom scratch"];
-B[label="Based\non JSON/YAML/XML"];
-C[label="Dynamically\ntyped"];
-D[label="Statically\ntyped"];
+A[label="Designed\nfrom scratch", fillcolor="#ff6666"];
+B[label="Based\non JSON/YAML/XML", fillcolor="#d1c85c"];
+C[label="Dynamically\ntyped", fillcolor="#ffb266"];
+D[label="Statically\ntyped", fillcolor="#a2d149"];
+A->1[style=invis];
+B->3[style=invis];
+C->2[style=invis];
+D->4[style=invis];
+
+1[shape=circle];
+2[shape=circle];
+3[shape=circle];
+4[shape=circle];
 }
 ----
 |
@@ -294,10 +303,10 @@ External->B[];
 Internal[];
 Internal->C[];
 Internal->D[]
-A[label="Designed\nfrom scratch"];
-B[label="Based\non JSON/YAML/XML"];
-C[label="Dynamically\ntyped"];
-D[label="Statically\ntyped"];
+A[label="Designed\nfrom scratch",fillcolor="#a2d149"];
+B[label="Based\non JSON/YAML/XML", fillcolor="#ffb266"];
+C[label="Dynamically\ntyped", fillcolor="#d1c85c"];
+D[label="Statically\ntyped", fillcolor="#ff6666"];
 }
 ----
 
@@ -340,7 +349,7 @@ D[label="Statically\ntyped"];
 
 |
 
-1. Is NOT an executable code
+1. Is NOT an executable code (which does not mean you're safe, Google for "XML bomb")
 2. Executable code
 
 |===
@@ -394,78 +403,57 @@ val y = p.second
 | `list.forEach({...})`
 | Lambda with receiver
 | `Person().apply { name = «John» }`
+`@DslMarker`
 | N/A
 | Context control
 | @DslMarker
 | N/A
 |===
 
-== Extension functions
+== Demo time!
 
-what extension functions are good for
+== Intermediate Conclusions
 
-* Extend "chaining" APIs with your own methods
+* One source can be used in 
+.. Execution of rules
+.. Documentation 
+.. Visualization
+.. Validation
+.. Serialization ("free" JSON/YAML based DSL version for our Kotlin DSL)
 
-(integration test examples)
+== Mixing DSL and code
 
-* Extend code generated classes
+We can leave extension points in our builder:
 
-== Lambda with receiver out of parentheses
-
-== Infix functions
-
-* limitations: no infix method call on "this"
-* thus no two word constructs without parentheses
-
-* But there can be a unary operator and parameter without parentheses
-
-== Internal vs External DSLs
-
-Internal DSLs 
-
-pros:
-
-* you already have an IDE, autosuggestions, validity checks (more so for statically typed languages)
-* you can mix it with actual code (? can be a huge drawback)
-cons: 
-* you are restricted by language's synthax (no parenthesis-less passing of parameters to the method)
+[source,kotlin]
+----
+//In our example
+customCondition { Random.nextDouble() < .88} invokes TransformationC
 
 
-External DSL pros
+//Or in some other DSL
+customBusinessRule { checkSmthProgramatically() }
+----
 
-* you are not restricted by the synthax and can invent anything you want (Hashicorp's own DSL)
-* this is by no means an executable code, so safety
+Great for describing business rules (state-transition model, for example), especially if DSL defines only part of rules, which is usually the case.
 
-cons
+== Infix functions don't work on `this`
 
-No ready-made IDE for you. Should write your own plugins for IDEs. In the modern world people do not write code withoug IDEs
+== @DslMarker example
 
+TODO
 
-== A midway solution
+== KTS example (restrictions?)
 
+TODO
 
-* Yaml/XML/JSon + schema 
+== Conclusions
 
-** IDEs will help you
-** XML is considered old-fashioned and verbose, JSON is also not human-friendly
-** Yaml is the only option, but as a language it has a lot of problems
+* DSL combined with designed patterns is a powerful tool for solving multiple tasks
 
-*** famous Norwegian problem
-*** You can cut off a part of YAML and still have a valid Yaml
-*** what else? TODO
+* Creating DSLs in Kotlin is not scary. You can improve parts of your existing internal APIs today making them "DSL-like"
 
-
-still YAML is the solution
-
-== One source to rule them all
-
-Rules/logic configuration
-
-Documentation generation/visualization
-
-Checking the DSLs correctness (testing the DSL)
-
-
+* Internal Kotlin DSLs are not the only way to implement DSLs, but definitely not the worst one in many scenarious.
 
 == Thanks for listening!
 

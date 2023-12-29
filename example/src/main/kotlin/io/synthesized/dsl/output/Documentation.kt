@@ -1,5 +1,9 @@
-package io.synthesized.dsls
+package io.synthesized.dsl.output
 
+import io.synthesized.dsl.element.And
+import io.synthesized.dsl.element.Not
+import io.synthesized.dsl.element.Or
+import io.synthesized.dsl.element.Rule
 import java.io.PrintWriter
 import java.io.StringWriter
 
@@ -20,14 +24,14 @@ fun Rule.describe(): String {
                 d.addLast("($a || $b)")
             }
 
-            else -> d.addLast("${it::class.simpleName}")
+            else -> d.addLast(it::class.simpleName ?: "CODE")
         }
     }
     return d.removeLast()
 }
 
 fun main() {
-    val rulesMap = rules.groupBy { it.transformation::class.simpleName }
+    val rulesMap = io.synthesized.dsl.rules.groupBy { it.transformation::class.simpleName }
     val sw = StringWriter()
     val pw = PrintWriter(sw)
     for ((transformation, rules) in rulesMap) {

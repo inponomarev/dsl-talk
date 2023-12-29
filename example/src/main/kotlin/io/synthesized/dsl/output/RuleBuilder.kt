@@ -1,4 +1,11 @@
-package io.synthesized.dsls
+package io.synthesized.dsl.output
+
+import io.synthesized.dsl.element.And
+import io.synthesized.dsl.element.Condition
+import io.synthesized.dsl.element.Not
+import io.synthesized.dsl.element.Or
+import io.synthesized.dsl.element.Rule
+import io.synthesized.dsl.element.Transformation
 
 class RuleBuilder {
     val rules = mutableListOf<Rule>()
@@ -8,6 +15,9 @@ class RuleBuilder {
     fun not(other: Condition) = Not(other)
 
     infix fun Condition.invokes(generator: Transformation) = rules.add(Rule(this, generator))
+
+    fun customCondition(lambda: () -> Boolean): Condition =
+        Condition(lambda)
 }
 
 fun rules(action: RuleBuilder.() -> Unit): List<Rule> {
