@@ -25,6 +25,19 @@ include::_doc_general_attributes.adoc[]
 
 :!figure-caption:
 
+
+
+[%notitle]
+== DSLs
+
+image::never.jpg[]
+
+ 
+== Unless it's a domain-specific language!
+
+image::never.jpg[]
+
+
 [%notitle]
 == Who am I
 
@@ -43,24 +56,36 @@ Ivan Ponomarev
 
 
 
-== DSLs
-Wikipedia:  "*A domain-specific language (DSL)* is a computer language specialized to a particular application domain"
+== What do we need DSLs for?
 
-I would say: a language a normal person can create
+[%step]
+. Code is clear and concise: easy to write, read, and support
+. Code can be written by a subject-matter expert, not a programmer
 
-== DSLs
+== What do we need DSLs for (in real life)?
 
-image::never.jpg[]
+. Code is clear and concise: easy to write, read, and support
+. *Sometimes* code can be written by a subject-matter expert, not a programmer
+. *Often* code can be read by a subject-matter expert
+
+== What do we need DSLs for (in real life)?
+
+. Code is clear and concise: easy to write, read, and support
+. *Sometimes* code can be written by a subject-matter expert, not a programmer
+. *Often* code can be read by a subject-matter expert
+. *DSL code is the single source of truth for many tasks/aspects of the project* 
+
 
 == DSLs external and internal
 
-[cols="50a,50a"]
+[cols="60a,40a"]
 |===
 |
 [graphviz]
 ----
 digraph G {
-graph [ dpi = 180 ];
+graph [ fontname="Sans"; dpi = 180 ];
+node [fontname = "Sans"];
 node[shape="block",style="rounded,filled", fillcolor="#ffffff"]
 DSLs;
 DSLs->External;
@@ -76,18 +101,21 @@ D[label="Statically\ntyped", style=invis]
 }
 ----
 |
-|===
+Martin Fowler, Rebecca Parsons. Domain-Specific Languages  
 
+image::fowler-dsl.jpg[{image-40-width}]
+
+|===
 == Types of external DSLs
 
-[cols="50a,50a"]
+[cols="60a,40a"]
 |===
 |
 [graphviz]
 ----
 digraph G {
-graph [ dpi = 180 ];
-node[shape="block",style="rounded,filled", fillcolor="#ffffff"]
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
 DSLs;
 DSLs->External;
 DSLs->Internal[];
@@ -104,9 +132,8 @@ D[label="Statically\ntyped", style=invis]
 ----
 |
 Designed from scratch::
-* SQL
-* DOT (GraphViz)
-* PO (`gettext` localization format)
+[%step]
+* DOT (GraphViz), PlantUML, gnuplot...
 * HCL (Hashicorp Configuration Language)
 * Gherkin (Cucumber framework's language)
 
@@ -114,14 +141,14 @@ Designed from scratch::
 
 == Types of external DSLs
 
-[cols="50a,50a"]
+[cols="60a,40a"]
 |===
 |
 [graphviz]
 ----
 digraph G {
-graph [ dpi = 180 ];
-node[shape="block",style="rounded,filled", fillcolor="#ffffff"]
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
 DSLs;
 DSLs->External;
 DSLs->Internal[];
@@ -139,6 +166,7 @@ D[label="Statically\ntyped", style=invis]
 |
 
 Based on general purpose markup language::
+[%step]
 * **YAML**: OpenAPI, Ansible, GithubActions, k8s definitions...
 * **XML**: XSLT, XSD
 * **JSON**: Vue i18n files 
@@ -148,7 +176,7 @@ Based on general purpose markup language::
 
 == Internal DSLs
 
-[cols="50a,50a"]
+[cols="60a,40a"]
 |===
 |
 
@@ -156,8 +184,8 @@ Based on general purpose markup language::
 ----
 digraph G {
 
-graph [ dpi = 180 ];
-node[shape="block",style="rounded,filled", fillcolor="#ffffff"]
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
 DSLs;
 DSLs->External;
 DSLs->Internal[];
@@ -177,7 +205,7 @@ D[label="Statically\ntyped",style=invis];
 |
 
 Subset of a dynamically typed language::
-
+[%step]
 * *Lisp* (historically first): Emacs Lisp, Symbolic Mathematics etc. 
 * *Ruby*: Rails, RSpec, Chef...
 * *Groovy*: Spock, Ratpack, Grails, Gradle, Jenkinsfile... 
@@ -186,7 +214,7 @@ Subset of a dynamically typed language::
 
 == Internal DSLs
 
-[cols="50a,50a"]
+[cols="60a,40a"]
 |===
 |
 
@@ -194,8 +222,8 @@ Subset of a dynamically typed language::
 ----
 digraph G {
 
-graph [ dpi = 180 ];
-node[shape="block",style="rounded,filled", fillcolor="#ffffff"]
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
 DSLs;
 DSLs->External;
 DSLs->Internal[];
@@ -215,7 +243,7 @@ D[label="Statically\ntyped", fillcolor="#ffffcc"];
 |
 
 Subset of a statically typed language::
-
+[%step]
 * *Scala*: Scalatest, Akka HTTP...
 * **Haskell**: Parsec
 * *Kotlin*: Kotlinx.html, Ktor, Gradle,...
@@ -223,115 +251,14 @@ Subset of a statically typed language::
 |===
 
 
-
-== DSL advantages
-
-. Code can *sometimes* be *written* by a subject-matter expert, not programmer
-. Code can *often* be *read* by a subject-matter expert
-. Code is concise: easy to write/easy to read/easy to support
-
-
-== DSL disadvantages
-
-. Expensive
-.. Requires development on its own
-.. Requires IDE support (or all pros will turn into contras)
-.. Requires a way to embed DSL into application
-. Restrictive
-
-== IDE support 
-
-[cols="50a,50a"]
-|===
-|
-
-[graphviz]
-----
-digraph G {
-
-graph [ dpi = 180 ];
-node[shape="block",style="rounded,filled", fillcolor="#ffffff"]
-DSLs;
-DSLs->External;
-DSLs->Internal[];
-External->A[];
-External->B[];
-Internal[];
-Internal->C[];
-Internal->D[]
-A[label="Designed\nfrom scratch", fillcolor="#ff6666"];
-B[label="Based\non JSON/YAML/XML", fillcolor="#d1c85c"];
-C[label="Dynamically\ntyped", fillcolor="#ffb266"];
-D[label="Statically\ntyped", fillcolor="#a2d149"];
-A->1[style=invis];
-B->3[style=invis];
-C->2[style=invis];
-D->4[style=invis];
-
-1[shape=circle];
-2[shape=circle];
-3[shape=circle];
-4[shape=circle];
-}
-----
-|
-
-1. No support at all
-2. Rudimentary support 
-3. Partial support (schema-based)
-4. Full support
-
-|===
-
 == Restrictions
 
-[cols="50a,50a"]
-|===
-|
-
 [graphviz]
 ----
 digraph G {
 
-graph [ dpi = 180 ];
-node[shape="block",style="rounded,filled", fillcolor="#ffffff"]
-DSLs;
-DSLs->External;
-DSLs->Internal[];
-External->A[];
-External->B[];
-Internal[];
-Internal->C[];
-Internal->D[]
-A[label="Designed\nfrom scratch",fillcolor="#a2d149"];
-B[label="Based\non JSON/YAML/XML", fillcolor="#ffb266"];
-C[label="Dynamically\ntyped", fillcolor="#d1c85c"];
-D[label="Statically\ntyped", fillcolor="#ff6666"];
-}
-----
-
-|
-
-1. You design it yourself
-2. You can be quite flexible
-3. You are restricted by markup synthax
-4. It's complicated
-
-|===
-
-
-== Security Concerns
-
-[cols="50a,50a"]
-|===
-|
-
-[graphviz]
-----
-digraph G {
-
-graph [ dpi = 180 ];
-node[shape="block",style="rounded,filled", fillcolor="#ffffff"]
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
 DSLs;
 DSLs->External;
 DSLs->Internal[];
@@ -344,21 +271,530 @@ A[label="Designed\nfrom scratch"];
 B[label="Based\non JSON/YAML/XML"];
 C[label="Dynamically\ntyped"];
 D[label="Statically\ntyped"];
+
+
+subgraph cluster_0 {
+A; 
+
+style="filled";
+color="#a2d149";
+label="\nNo restrictions"
+labelloc="b"
+}
+
+subgraph cluster_1 {
+B; 
+
+style="invis";
+color="#ffb266";
+label="Limited\nby markup synthax";
+labelloc="b";
+}
+
+subgraph cluster_2 {
+C; 
+
+style="invis";
+color="#d1c85c";
+label="Synthax restrictions\n(weak)";
+labelloc="b";
+}
+
+subgraph cluster_3 {
+D; 
+
+style="invis";
+color="#ff6666";
+label="Synthax\nrestrictions";
+labelloc="b";
+}
+
 }
 ----
 
-|
+== Restrictions
 
-1. Is NOT an executable code (which does not mean you're safe, Google for "XML bomb")
-2. Executable code
+[graphviz]
+----
+digraph G {
 
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped"];
+
+
+subgraph cluster_0 {
+A; 
+
+style="filled";
+color="#a2d149";
+label="\nNo restrictions"
+labelloc="b"
+}
+
+subgraph cluster_1 {
+B; 
+
+style="invis";
+color="#ffb266";
+label="Limited\nby markup synthax";
+labelloc="b";
+}
+
+subgraph cluster_2 {
+C; 
+
+style="filled";
+color="#d1c85c";
+label="Synthax restrictions\n(weak)";
+labelloc="b";
+}
+
+subgraph cluster_3 {
+D; 
+
+style="invis";
+color="#ff6666";
+label="Synthax\nrestrictions";
+labelloc="b";
+}
+
+}
+----
+== Restrictions
+
+[graphviz]
+----
+digraph G {
+
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped"];
+
+
+subgraph cluster_0 {
+A; 
+
+style="filled";
+color="#a2d149";
+label="\nNo restrictions"
+labelloc="b"
+}
+
+subgraph cluster_1 {
+B; 
+
+style="filled";
+color="#ffb266";
+label="Limited\nby markup synthax";
+labelloc="b";
+}
+
+subgraph cluster_2 {
+C; 
+
+style="filled";
+color="#d1c85c";
+label="Synthax restrictions\n(weak)";
+labelloc="b";
+}
+
+subgraph cluster_3 {
+D; 
+
+style="invis";
+color="#ff6666";
+label="Synthax\nrestrictions";
+labelloc="b";
+}
+
+}
+----
+== Restrictions
+
+[graphviz]
+----
+digraph G {
+
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped"];
+
+
+subgraph cluster_0 {
+A; 
+
+style="filled";
+color="#a2d149";
+label="\nNo restrictions"
+labelloc="b"
+}
+
+subgraph cluster_1 {
+B; 
+
+style="filled";
+color="#ffb266";
+label="Limited\nby markup synthax";
+labelloc="b";
+}
+
+subgraph cluster_2 {
+C; 
+
+style="filled";
+color="#d1c85c";
+label="Synthax restrictions\n(weak)";
+labelloc="b";
+}
+
+subgraph cluster_3 {
+D; 
+
+style="filled";
+color="#ff6666";
+label="Synthax\nrestrictions";
+labelloc="b";
+}
+
+}
+----
+
+
+
+== IDE support 
+
+[graphviz]
+----
+digraph G {
+
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped"];
+
+subgraph cluster_0 {
+A; 
+
+style="filled"
+color="#ff6666"
+label="\nNo support"
+labelloc="b"
+}
+
+subgraph cluster_1 {
+B; 
+
+style="invis"
+color="#d1c85c"
+label="Partial support\n(schema-based)"
+labelloc="b"
+}
+
+subgraph cluster_2 {
+C; 
+
+style="invis"
+color="#ffb266"
+label="Rudimentary\nsupport"
+labelloc="b"
+}
+
+subgraph cluster_3 {
+D; 
+
+style="invis"
+color="#a2d149"
+label="\nFull support"
+labelloc="b"
+}
+
+}
+----
+
+== IDE support 
+
+[graphviz]
+----
+digraph G {
+
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped"];
+
+subgraph cluster_0 {
+A; 
+
+style="filled"
+color="#ff6666"
+label="\nNo support"
+labelloc="b"
+}
+
+subgraph cluster_1 {
+B; 
+
+style="invis"
+color="#d1c85c"
+label="Partial support\n(schema-based)"
+labelloc="b"
+}
+
+subgraph cluster_2 {
+C; 
+
+style="filled"
+color="#ffb266"
+label="Rudimentary\nsupport"
+labelloc="b"
+}
+
+subgraph cluster_3 {
+D; 
+
+style="invis"
+color="#a2d149"
+label="\nFull support"
+labelloc="b"
+}
+
+}
+----
+
+== IDE support 
+
+[graphviz]
+----
+digraph G {
+
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped"];
+
+subgraph cluster_0 {
+A; 
+
+style="filled"
+color="#ff6666"
+label="\nNo support"
+labelloc="b"
+}
+
+subgraph cluster_1 {
+B; 
+
+style="filled"
+color="#d1c85c"
+label="Partial support\n(schema-based)"
+labelloc="b"
+}
+
+subgraph cluster_2 {
+C; 
+
+style="filled"
+color="#ffb266"
+label="Rudimentary\nsupport"
+labelloc="b"
+}
+
+subgraph cluster_3 {
+D; 
+
+style="invis"
+color="#a2d149"
+label="\nFull support"
+labelloc="b"
+}
+
+}
+----
+
+== IDE support 
+
+[graphviz]
+----
+digraph G {
+
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped"];
+
+subgraph cluster_0 {
+A; 
+
+style="filled"
+color="#ff6666"
+label="\nNo support"
+labelloc="b"
+}
+
+subgraph cluster_1 {
+B; 
+
+style="filled"
+color="#d1c85c"
+label="Partial support\n(schema-based)"
+labelloc="b"
+}
+
+subgraph cluster_2 {
+C; 
+
+style="filled"
+color="#ffb266"
+label="Rudimentary\nsupport"
+labelloc="b"
+}
+
+subgraph cluster_3 {
+D; 
+
+style="filled"
+color="#a2d149"
+label="\nFull support"
+labelloc="b"
+}
+
+}
+----
+
+
+== Security Concerns
+
+[graphviz]
+----
+digraph G {
+
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->B[];
+External->A[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped"];
+
+subgraph cluster_0 {
+  A;
+  B;
+  style="filled";
+  color="#a2d149";
+  label="NOT an executable code*";
+  labelloc="b";
+}
+
+subgraph cluster_1 {
+  C;
+  D;
+  style="filled";
+  color="#ff6666";
+  label="Executable code";
+  labelloc="b";
+}
+
+}
+
+
+----
+
+&ast; Does not mean that you are safe, e.g. google for https://en.wikipedia.org/wiki/Billion_laughs_attack["Billion_laughs_attack"]
+
+== Kotlin language features for DSL building
+
+[cols="30a,70a"]
 |===
-
+|
+image::jemerov-kotlin.png[]
+|
+* *Dmitry Jemerov, Svetlana Isakova* Kotlin in Action
+* *Ivan Osipov* Kotlin DSL: from Theory to Practice (JMix blog) https://www.jmix.io/cuba-blog/kotlin-dsl-from-theory-to-practice/
+|===
 == Kotlin language features for DSL building 
 
-https://www.jmix.io/cuba-blog/kotlin-dsl-from-theory-to-practice/
-
-[cols="1a,1a,1a"]
+[cols="30a,35a,35a"]
 |===
 | Tool	| DSL syntax | General syntax
 | Extension functions
@@ -369,57 +805,83 @@ mylist.first();
 /* there isn’t first() method
 in mylist collection*/
 ----
-| `ListUtlis.first(mylist)`
+| 
+[source,kotlin]
+ListUtlis.first(mylist)
+
 | Infix functions
-| `1 to "one"`
-| `1.to("one")`
+| 
+[source,kotlin]
+1 to "one"
+| 
+[source,kotlin]
+1.to("one")
 | Operators overloading
-| `collection += element`
-| `collection.add(element)`
+| 
+[source,kotlin]
+collection += element
+| 
+[source,kotlin]
+collection.add(element)
 | Type aliases
-| `typealias Point = Pair`
+| 
+[source,kotlin]
+typealias Point = Pair
 | Creating empty inheritors classes and other duct tapes
-| get/set methods convention
 |===
 
 == Kotlin language features for DSL building (continued)
 
 
-[cols="1a,1a,1a"]
+[cols="30a,35a,35a"]
 |===
 | Tool	| DSL syntax | General syntax
-| `map["key"] = "value"`
-| `map.put("key", "value")`
+| get/set methods convention
+| 
+[source,kotlin]
+map["key"] = "value"
+| 
+[source,kotlin]
+map.put("key", "value")
 | Destructuring declaration
-| `val (x, y) = Point(0, 0)`
+| 
+[source,kotlin]
+val (x, y) = Point(0, 0)
 | 
 [source,kotlin]
 ----
-val p = Point(0, 0); val x = p.first; 
+val p = Point(0, 0)
+val x = p.first 
 val y = p.second
 ----
 | Lambda out of parentheses
-| `list.forEach { ... }`
-| `list.forEach({...})`
+| 
+[source,kotlin]
+list.forEach { ... }
+| 
+[source,kotlin]
+list.forEach({...})
 | Lambda with receiver
-| `Person().apply { name = «John» }`
-`@DslMarker`
+| 
+[source,kotlin]
+Person().apply { name = «John» }
 | N/A
 | Context control
-| @DslMarker
+| 
+[source,kotlin]
+@DslMarker
 | N/A
 |===
 
 == Demo time!
 
-== Intermediate Conclusions
-
-* One source can be used in 
-.. Execution of rules
-.. Documentation 
-.. Visualization
-.. Validation
-.. Serialization ("free" JSON/YAML based DSL version for our Kotlin DSL)
+== One source to be used in
+ 
+. Execution of rules
+. Documentation 
+. Visualization
+. Validation
+. Serialization ("free" JSON/YAML based DSL version for our Kotlin DSL)
 
 == Mixing DSL and code
 
