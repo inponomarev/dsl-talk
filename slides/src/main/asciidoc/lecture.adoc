@@ -901,13 +901,61 @@ Great for describing business rules (state-transition model, for example), espec
 
 == Infix functions don't work on `this`
 
-== @DslMarker example
+[source,kotlin]
+----
+    brightonKotlin {
+        //Cannot get rid of paretheses (unlike Groovy)
+        talk ("Talk 1") deliveredBy {
+            speaker ("Speaker 1")
+            speaker ("Speaker 2")
+        }
+        talk ("Talk 2") deliveredBy {
+            speaker("ssd")
+            speaker ("Speaker 3")
+        }
+    }
+----
 
-TODO
+== Infix functions don't work on `this`: a workaround
 
-== KTS example (restrictions?)
+[source,kotlin]
+----
+    brightonKotlin {
+        //Cannot get rid of paretheses
+        + "Talk 1" deliveredBy {
+            + "Speaker 1"
+            + "Speaker 2"
+        }
+        + "Talk 2" deliveredBy {
+            + "ssd"
+            + "Speaker 3"
+        }
+    }
+----
 
-TODO
+== @DslMarker
+
+[source,kotlin]
+----
+    talk ("Talk 1") deliveredBy {
+        talk (...) // ???
+    }
+----
+
+== @DslMarker
+
+[source,kotlin]
+----
+@DslMarker
+annotation class MeetupDsl
+
+@MeetupDsl
+class MeetupBuilder { ... } 
+
+@MeetupDsl
+class SpeakersBuilder { ... }
+----
+
 
 == Conclusions
 

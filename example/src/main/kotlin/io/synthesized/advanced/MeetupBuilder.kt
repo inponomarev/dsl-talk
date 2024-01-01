@@ -6,20 +6,24 @@ data class Speaker(val name: String)
 @DslMarker
 annotation class MeetupDsl
 
-@MeetupDsl
+//@MeetupDsl
 class MeetupBuilder {
-    @MeetupDsl
+    //@MeetupDsl
     class SpeakersBuilder {
         val speakers = mutableListOf<Speaker>()
         fun speaker(name: String) {
             speakers.add(Speaker(name))
+        }
+
+        operator fun String.unaryPlus() {
+            speakers.add(Speaker(this))
         }
     }
 
     val talks = mutableListOf<Talk>()
 
     fun talk(name: String) = Talk(name, listOf())
-
+    operator fun String.unaryPlus() = Talk(this, listOf())
     infix fun Talk.deliveredBy(action: SpeakersBuilder.() -> Unit) {
         val builder = SpeakersBuilder()
         builder.action()
