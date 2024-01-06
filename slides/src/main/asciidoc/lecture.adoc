@@ -26,16 +26,20 @@ include::_doc_general_attributes.adoc[]
 :!figure-caption:
 
 
-
 [%notitle]
 == DSLs
 
 image::never.jpg[]
 
- 
+[%notitle] 
+== Unless it's Kotlin!
+
+image::never1.jpg[]
+
+[%notitle] 
 == Unless it's a domain-specific language!
 
-image::never.jpg[]
+image::never2.jpg[]
 
 
 [%notitle]
@@ -168,8 +172,8 @@ D[label="Statically\ntyped", style=invis]
 Based on general purpose markup language::
 [%step]
 * **YAML**: OpenAPI, Ansible, GithubActions, k8s definitions...
+* **JSON**: Vue i18n files
 * **XML**: XSLT, XSD
-* **JSON**: Vue i18n files 
 
 |===
 
