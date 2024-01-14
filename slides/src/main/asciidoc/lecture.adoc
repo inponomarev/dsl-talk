@@ -59,22 +59,17 @@ Ivan Ponomarev
 |===
 
 
-
 == What do we need DSLs for?
 
-[%step]
-. Code is clear and concise: easy to write, read, and support
 . Code can be written by a subject-matter expert, not a programmer
 
 == What do we need DSLs for (in real life)?
 
-. Code is clear and concise: easy to write, read, and support
 . *Sometimes* code can be written by a subject-matter expert, not a programmer
 . *Often* code can be read by a subject-matter expert
 
 == What do we need DSLs for (in real life)?
 
-. Code is clear and concise: easy to write, read, and support
 . *Sometimes* code can be written by a subject-matter expert, not a programmer
 . *Often* code can be read by a subject-matter expert
 . *DSL code is the single source of truth for many tasks/aspects of the project* 
@@ -534,7 +529,7 @@ B;
 
 style="invis"
 color="#d1c85c"
-label="Partial support\n(schema-based)"
+label="Schema-based\nsupport"
 labelloc="b"
 }
 
@@ -594,7 +589,7 @@ B;
 
 style="invis"
 color="#d1c85c"
-label="Partial support\n(schema-based)"
+label="Schema-based\nsupport"
 labelloc="b"
 }
 
@@ -654,7 +649,7 @@ B;
 
 style="filled"
 color="#d1c85c"
-label="Partial support\n(schema-based)"
+label="Schema-based\nsupport"
 labelloc="b"
 }
 
@@ -714,7 +709,7 @@ B;
 
 style="filled"
 color="#d1c85c"
-label="Partial support\n(schema-based)"
+label="Schema-based\nsupport"
 labelloc="b"
 }
 
@@ -754,8 +749,8 @@ DSLs->Internal[];
 External->B[];
 External->A[];
 Internal[];
+Internal->D[];
 Internal->C[];
-Internal->D[]
 A[label="Designed\nfrom scratch"];
 B[label="Based\non JSON/YAML/XML"];
 C[label="Dynamically\ntyped"];
@@ -786,16 +781,7 @@ subgraph cluster_1 {
 
 &ast; Does not mean that you are safe, e.g. google for https://en.wikipedia.org/wiki/Billion_laughs_attack["Billion_laughs_attack"]
 
-== Kotlin language features for DSL building
 
-[cols="30a,70a"]
-|===
-|
-image::jemerov-kotlin.png[]
-|
-* *Dmitry Jemerov, Svetlana Isakova* Kotlin in Action
-* *Ivan Osipov* Kotlin DSL: from Theory to Practice (JMix blog) https://www.jmix.io/cuba-blog/kotlin-dsl-from-theory-to-practice/
-|===
 == Kotlin language features for DSL building 
 
 [cols="30a,35a,35a"]
@@ -960,18 +946,46 @@ class MeetupBuilder { ... }
 class SpeakersBuilder { ... }
 ----
 
+== Reading/watching suggestions
+
+[cols="30a,70a"]
+|===
+|
+image::jemerov-kotlin.png[]
+|
+* A book: *Dmitry Jemerov, Svetlana Isakova* Kotlin in Action
+* A blog post: *Ivan Osipov* Kotlin DSL: from Theory to Practice (JMix blog) https://www.jmix.io/cuba-blog/kotlin-dsl-from-theory-to-practice/
+* A conference talk: *Anton Arhipov* Kotlin DSL in under an hour https://www.youtube.com/watch?v=0DJqr4FZ6f0
+|===
+
+== Examples for your inspiration
+
+* Gradle Kotlin DSL
+* Ktor Framework: https://ktor.io/
+* Exposed (an ORM for Kotlin): https://github.com/JetBrains/Exposed?tab=readme-ov-file#examples
 
 == Conclusions
 
+[%step]
 * DSL combined with designed patterns is a powerful tool for solving multiple tasks
-
 * Creating DSLs in Kotlin is not scary. You can improve parts of your existing internal APIs today making them "DSL-like"
-
 * Internal Kotlin DSLs are not the only way to implement DSLs, but definitely not the worst one in many scenarious.
 
 == Thanks for listening!
+
+[cols="40a,60a"]
+|===
+|
+image::qr.svg[{image-40-width}]
+
+Code and slides are available on GitHub
+https://github.com/inponomarev/dsl-talk
+
+|
+
 
 
 icon:envelope[size=lg] ivan@synthesized.io
 
 icon:twitter[size=lg] @inponomarev
+|===
