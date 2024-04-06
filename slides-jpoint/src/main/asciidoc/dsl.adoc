@@ -1,0 +1,75 @@
+.Who creates DSLs
+. Ready to use
+. Self made
+.. From scratch
+.. With some framework (a Kotlin case)
+
+.How DSLs are implemented
+. External
+.. Based on general purpose markup language (JSON, YAML, XML). OpenAPI, XSLT, Vue 18n localization files
+.. Designed from scratch: SQL, Po (get text localization format)
+. Internal: subset of some language (a Kotlin case)
+
+.Pros
+.. Code can be written by subject-matter expert (not a Kotlin case)
+.. Code can be read by subject-matter expert (in part a Kotlin case)
+.. Code is concise: easy to write/easy to read/easy to support (a Kotlin case, reference to examples)
+
+.Contras
+.. Expensive
+... Requires development on its own
+... Requires IDE support (or all pros will turn into contras)
+... Requires a way to embed DSL into application
+.. Restrictive
+
+In case of Kotlin contras are almost insignificant, hence we use native language constructions and have great IDE support.
+
+At to embedding, we can use it both as part of a project or in Kotlin Script.
+
+So, we should use in problems where pros are sound (or just for pleasure).
+
+.Most used language constructions (a full list here https://habr.com/ru/companies/haulmont/articles/341402/)
+
+.. -"instead of addTextNode(someString)" (redifining operators)
+.. `myObject.apply { Do smth in object context }` (`apply` does anything in object context)
+.. `myBusenessRuleFunction { checkSmthProgramatically() }`
+.. myBusinessObject hasName "name of my business object"
+
+Generally we get rid of long smth.smth.smth chains and of excessive brackets. There is great number of cases when it really gives profit
+
+.Some of such a cases
+. Great for describing business rules (state-transition model, for example), especially if DSL defines only part of rules, which is usually the case
+. Great for entering test data
++
+[source, kotlin]
+----
+val myClass = MyClass.apply {
+  id = "some id"
+  students = arrayListOf(
+    Student().apply {
+      name = "Emily"
+      place = "Brighton"
+    },
+    Student().apply {
+      name = "John"
+      place = "London"
+    },
+  )
+}
+----
++
+or event (I don't like because chasing looks-like-human-language is brain exhausting and with no result guarantee)
++
+[source, kotlin]
+----
+val myClass = MyClass.apply {
+  id = "some id"
+  students {
+    +"Emily" situatedIn "Brighton",
+    +"John" situatedIn "London"
+  }
+}
+----
+. Great for using Kotlin as templating language (xml builder)
+
+Pitfall -- Kotlin DSL automatic generation. Possible, but should be done carefully.

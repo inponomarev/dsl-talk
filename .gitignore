@@ -21,3 +21,4 @@ src/main/asciidoc/*.png
 /*.bat
 .asciidoctor
 slides/src/main/asciidoc/images/diag-*.png
+slides-jpoint/src/main/asciidoc/images/diag-*.png

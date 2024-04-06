@@ -17,13 +17,11 @@ fun Rule.describe(): String {
                 val a = d.removeLast()
                 d.addLast("($a && $b)")
             }
-
             is Or -> {
                 val b = d.removeLast();
                 val a = d.removeLast()
                 d.addLast("($a || $b)")
             }
-
             else -> d.addLast(it::class.simpleName ?: "CODE")
         }
     }

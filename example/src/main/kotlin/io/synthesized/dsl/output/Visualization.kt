@@ -7,6 +7,7 @@ import io.synthesized.dsl.element.Element
 import io.synthesized.dsl.element.Not
 import io.synthesized.dsl.element.Rule
 import io.synthesized.dsl.element.Transformation
+import io.synthesized.dsl.rules
 import java.awt.Desktop
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -53,7 +54,7 @@ fun main() {
         }
     }
 
-    for (rule in io.synthesized.dsl.rules) {
+    for (rule in rules) {
         rule.visit(::visitor)
     }
     pw.println("  {rank=\"same\";${transformations.map(visited::get).joinToString(";")};}")

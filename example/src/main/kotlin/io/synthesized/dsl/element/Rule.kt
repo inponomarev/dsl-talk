@@ -10,3 +10,7 @@ class Rule(
         visitor.invoke(this)
     }
 }
+
+fun main() {
+
+}

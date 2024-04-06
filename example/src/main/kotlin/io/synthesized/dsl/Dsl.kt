@@ -11,14 +11,14 @@ import io.synthesized.dsl.element.TransformationC
 import io.synthesized.dsl.output.rules
 
 val rules: List<Rule> =
+    // @formatter:off
     rules {
-        ConditionII invokes TransformationC
-
-        not(ConditionIV) invokes TransformationB
-
+        ConditionI and ConditionIV         invokes TransformationA
+        ConditionII                        invokes TransformationC
+        not(ConditionIV)                   invokes TransformationB
         (ConditionI and not(ConditionIII)) invokes TransformationA
-
-        (ConditionIII and ConditionIV or ConditionI) invokes TransformationB
-
-        //Condition { Random.nextDouble() < .88} invokes TransformationC
+        (ConditionIII
+                and ConditionIV
+                or ConditionI)             invokes TransformationB
     }
+   // @formatter:on

@@ -1,5 +1,7 @@
 package io.synthesized.dsl.output
 
+import io.synthesized.dsl.rules
+
 fun main() {
-    io.synthesized.dsl.rules.firstOrNull { it.condition.met() }?.transformation?.run()
+    rules.firstOrNull { it.condition.met() }?.transformation?.run()
 }

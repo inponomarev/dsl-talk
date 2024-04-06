@@ -22,5 +22,7 @@ private fun rules(): List<Rule> = listOf(
 
 
 fun main() {
-    rules().firstOrNull { it.condition.met() }?.transformation?.run()
+    rules()
+        .firstOrNull { it.condition.met() }
+        ?.transformation?.run()
 }
