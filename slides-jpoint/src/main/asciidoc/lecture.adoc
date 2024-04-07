@@ -36,12 +36,22 @@ include::_doc_general_attributes.adoc[]
 
 Иван Пономарёв
 
-* Staff Engineer @ Synthesized.io
-* Teaching Java @ Northeastern University London
+* Java и Kotlin разработчик
+* Преподаю в МФТИ
 
 
 |===
 
+== В этом докладе будут
+
+[%step]
+* Рассуждения о сильных и слабых сторонах Kotlin DSL по сравнению с другими вариантами создания DSL-ей
+* Несколько примеров задач, решаемых с помощью Kotlin DSL
+* Некоторые продвинутые частности проектирования Kotlin DSL 
+
+== В этом докладе не будет
+
+* Введения в создание Kotlin DSL (но будет много ссылок на соответствующие материалы)
 
 == Зачем нам нужны DSLи (в наших мечтах)?
 
@@ -115,7 +125,7 @@ D[label="Statically\ntyped", style=invis]
 }
 ----
 |
-Designed from scratch::
+Разработанные с нуля::
 [%step]
 * DOT (GraphViz), PlantUML, gnuplot...
 * HCL (Hashicorp Configuration Language)
@@ -149,7 +159,7 @@ D[label="Statically\ntyped", style=invis]
 ----
 |
 
-Based on general purpose markup language::
+На основе языков разметки::
 [%step]
 * **YAML**: OpenAPI, Ansible, GithubActions, k8s definitions...
 * **JSON**: Vue i18n files
@@ -188,7 +198,7 @@ D[label="Statically\ntyped",style=invis];
 
 |
 
-Subset of a dynamically typed language::
+Подмножество динамически типизированного языка::
 [%step]
 * *Lisp* (historically first): Emacs Lisp, Symbolic Mathematics etc. 
 * *Ruby*: Rails, RSpec, Chef...
@@ -226,7 +236,7 @@ D[label="Statically\ntyped", fillcolor="#ffffcc"];
 
 |
 
-Subset of a statically typed language::
+Подмножество статически типизированного языка::
 [%step]
 * *Scala*: Scalatest, Akka HTTP...
 * **Haskell**: Parsec
