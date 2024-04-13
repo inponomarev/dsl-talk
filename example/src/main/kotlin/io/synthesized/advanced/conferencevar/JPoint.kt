@@ -2,7 +2,7 @@ package io.synthesized.advanced.conferencevar
 
 private val jpoint = javaConference {
 
-    val ip = Speaker("Иван Пономарев", "N/A")
+    val ip = Speaker("Иван Пономарев", "МФТИ")
 
     talk("Пишем приложение на Ktor") deliveredBy {
         + Speaker("Александр Нозик", "МФТИ")

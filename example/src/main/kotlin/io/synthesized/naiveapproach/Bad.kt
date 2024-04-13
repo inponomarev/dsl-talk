@@ -16,6 +16,8 @@ fun main() {
         runTransformationB()
     } else if (conditionTwoMet()) {
         runTransformationC()
+    } else {
+        runTransformationB()
     }
 }
 
