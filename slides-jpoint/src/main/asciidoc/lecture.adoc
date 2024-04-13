@@ -1,10 +1,10 @@
 = One Source to Rule Them All: Kotlin DSLs as a Single Source of Truth for Multiple Tasks 
 Ivan Ponomarev
-:revealjs_theme: black
+:revealjs_theme: white
 :revealjs_customtheme: white_course.css
-:revealjs_slideNumber:
+:revealjs_slideNumber: true
 :revealjs_history:
-:revealjs_progress:
+:revealjs_progress: true
 :encoding: UTF-8
 :lang: ru
 include::_doc_general_attributes.adoc[]
@@ -22,7 +22,7 @@ include::_doc_general_attributes.adoc[]
 :revealjs_width: 1600
 :revealjs_height: 900
 :stem: latexmath
-
+:sectnums!:
 :!figure-caption:
 
 
@@ -886,7 +886,7 @@ list.forEach({...})
 | *Lambda with receiver* (главный инструмент)
 | 
 [source,kotlin]
-Person().apply { name = «John» }
+Person().apply { name = "John" }
 | N/A
 | Context control
 | 
@@ -1083,11 +1083,13 @@ image::asciidoctor.png[{image-70-width}]
 
 == DocOps и автоматизация документирования
 
-image::up-to-doc.jpg[{image-60-width}]
-
-
-Heisenbug 2022, DevOops 2022
-
+[cols="50a,50a"]
+|===
+|
+image::up-to-doc.jpg[]
+|
+image::arch-as-code.jpg[]
+|===
 
 == Сериализация
 
