@@ -1,6 +1,7 @@
 package io.synthesized.advanced.conferencedelegate
 
 import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KProperty
 
 data class Talk(val name: String, val speakers: List<Speaker>, val experts: List<Speaker>)
 data class Speaker(val id: String, val name: String, val company: String)
@@ -48,8 +49,8 @@ class ConferenceBuilder {
     }
 
     val speakers = mutableMapOf<String, Speaker>()
-    fun speaker(name: String, company: String): ReadOnlyProperty<Nothing?, Speaker> =
-        ReadOnlyProperty { _, property ->
+    fun speaker(name: String, company: String): ReadOnlyProperty<Any?, Speaker> =
+        ReadOnlyProperty { _, property: KProperty<*> ->
             speakers.computeIfAbsent(property.name) { Speaker(it, name, company) }
         }
 

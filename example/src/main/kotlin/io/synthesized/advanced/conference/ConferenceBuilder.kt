@@ -3,7 +3,7 @@ package io.synthesized.advanced.conference
 data class Talk(val name: String, val speakers: List<Speaker>, val experts: List<Speaker>)
 data class Speaker(val name: String)
 
-@DslMarker
+//@DslMarker
 annotation class ConferenceDsl
 
 @ConferenceDsl

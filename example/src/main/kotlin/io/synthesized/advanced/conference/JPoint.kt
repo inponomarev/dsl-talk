@@ -3,7 +3,6 @@ package io.synthesized.advanced.conference
 private val jpoint = javaConference {
 
     talk("Пишем приложение на Ktor") deliveredBy {
-
         speaker("Александр Нозик")
         speaker("Глеб Королькевич")
     }
