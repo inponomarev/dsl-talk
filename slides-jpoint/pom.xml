@@ -123,42 +123,53 @@
                 </dependencies>
                 <configuration>
                     <sourceDirectory>src/main/asciidoc</sourceDirectory>
-                    <sourceDocumentName>lecture.adoc</sourceDocumentName>
-                    <outputFile>index.html</outputFile>
                     <logHandler>
                         <outputToConsole>true</outputToConsole>
                     </logHandler>
+                    <!-- include the asciidoctor-revealjs gem -->
+                    <gemPath>${project.build.directory}/gems</gemPath>
+                    <requires>
+                        <require>asciidoctor-revealjs</require>
+                        <require>asciidoctor-diagram</require>
+                    </requires>
+                    <outputDirectory>${project.slides.directory}</outputDirectory>
+                    <backend>revealjs</backend>
+                    <attributes>
+                        <!--
+                                As we are downloading reveal.js in runtime, it sits in a nonstandard folder `reveal.js-${revealjs.version}`
+                            -->
+                        <revealjsdir>reveal.js-${revealjs.version}</revealjsdir>
+                        <!-- put here the reveal.js specific attributes -->
+                        <sourcedir>${basedir}/src/main/java</sourcedir>
+                        <revealjs_theme>black</revealjs_theme>
+                        <!--<revealjs_transition>linear</revealjs_transition>-->
+                        <project-version>${project.version}</project-version>
+                        <rouge-style>github</rouge-style>
+                        <rouge-css>style</rouge-css>
+                        <source-highlighter>rouge</source-highlighter>
+                    </attributes>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>generate-slides</id>
+                        <id>generate-ru-slides</id>
                         <phase>process-resources</phase>
                         <goals>
                             <goal>process-asciidoc</goal>
                         </goals>
                         <configuration>
-                            <!-- include the asciidoctor-revealjs gem -->
-                            <gemPath>${project.build.directory}/gems</gemPath>
-                            <requires>
-                                <require>asciidoctor-revealjs</require>
-                                <require>asciidoctor-diagram</require>
-                            </requires>
-                            <outputDirectory>${project.slides.directory}</outputDirectory>
-                            <backend>revealjs</backend>
-                            <attributes>
-                                <!--
-                                        As we are downloading reveal.js in runtime, it sits in a nonstandard folder `reveal.js-${revealjs.version}`
-                                    -->
-                                <revealjsdir>reveal.js-${revealjs.version}</revealjsdir>
-                                <!-- put here the reveal.js specific attributes -->
-                                <sourcedir>${basedir}/src/main/java</sourcedir>
-                                <revealjs_theme>black</revealjs_theme>
-                                <!--<revealjs_transition>linear</revealjs_transition>-->
-                                <project-version>${project.version}</project-version>
-                                <rouge-style>github</rouge-style>
-                                <rouge-css>style</rouge-css>
-                                <source-highlighter>rouge</source-highlighter>
-                            </attributes>
+                            <sourceDocumentName>lecture.adoc</sourceDocumentName>
+                            <outputFile>index.html</outputFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-en-slides</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDocumentName>lecture-en.adoc</sourceDocumentName>
+                            <outputFile>index-en.html</outputFile>
                         </configuration>
                     </execution>
                 </executions>

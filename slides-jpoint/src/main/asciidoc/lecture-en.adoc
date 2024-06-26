@@ -1,0 +1,1317 @@
+= One Source to Rule Them All: Kotlin DSLs as a Single Source of Truth for Multiple Tasks 
+Ivan Ponomarev
+:revealjs_theme: white
+:revealjs_customtheme: white_course.css
+:revealjs_slideNumber: true
+:revealjs_history:
+:revealjs_progress: true
+:encoding: UTF-8
+:lang: ru
+include::_doc_general_attributes.adoc[]
+:doctype: article
+:toclevels: 3
+:imagesdir: images
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+:icons: font
+:iconfont-remote!:
+:iconfont-name: font-awesome-4.7.0/css/font-awesome
+:revealjs_mouseWheel: true
+:revealjs_center: false
+:revealjs_transition: none
+:revealjs_width: 1600
+:revealjs_height: 900
+:stem: latexmath
+:sectnums!:
+:!figure-caption:
+
+
+[%notitle]
+== Who am I
+
+[cols="30a,70a"]
+|===
+|image::ivan.jpg[]
+|
+
+Ivan Ponomarev
+
+* Staff Engineer @ Synthesized.io
+* Teaching Java & CS at universities
+
+
+|===
+
+== In this presentation, there will be
+
+[%step]
+* Discussions on the strengths and weaknesses of Kotlin DSL compared to other options for creating DSLs
+* Several examples of tasks solved using Kotlin DSL
+* Some advanced specifics of designing Kotlin DSL
+
+== In this presentation, there will not be
+
+* An introduction to creating Kotlin DSL (but there will be many references to relevant materials)
+
+== DSLs external and internal
+
+[cols="60a,40a"]
+|===
+|
+[graphviz]
+----
+digraph G {
+graph [ fontname="Sans"; dpi = 180 ];
+node [fontname = "Sans"];
+node[shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal;
+External->A[style=invis];
+External->B[style=invis];
+Internal->C[style=invis];
+Internal->D[style=invis];
+A[label="Designed\nfrom scratch",style="invis"];
+B[label="Based\non JSON/YAML/XML", style="invis"];
+C[label="Dynamically\ntyped",style=invis];
+D[label="Statically\ntyped", style=invis]
+}
+----
+|
+*Martin Fowler, Rebecca Parsons* +
+Domain-Specific Languages  
+
+image::fowler-dsl.jpg[{image-40-width}]
+
+|===
+== Types of external DSLs
+
+[cols="60a,40a"]
+|===
+|
+[graphviz]
+----
+digraph G {
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[style=invis];
+Internal[];
+Internal->C[style=invis];
+Internal->D[style=invis];
+A[label="Designed\nfrom scratch", fillcolor="#ffffcc"];
+B[label="Based\non JSON/YAML/XML",style=invis];
+C[label="Dynamically\ntyped", style=invis];
+D[label="Statically\ntyped", style=invis]
+}
+----
+|
+Designed from scratch::
+[%step]
+* DOT (GraphViz), PlantUML, gnuplot...
+* HCL (Hashicorp Configuration Language)
+* Gherkin (Cucumber framework's language)
+
+|===
+
+== Types of external DSLs
+
+[cols="60a,40a"]
+|===
+|
+[graphviz]
+----
+digraph G {
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[style=invis];
+Internal->D[style=invis];
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML", fillcolor="#ffffcc"];
+C[label="Dynamically\ntyped", style=invis];
+D[label="Statically\ntyped", style=invis]
+}
+----
+|
+
+Based on general purpose markup language::
+[%step]
+* **YAML**: OpenAPI, Ansible, GithubActions, k8s definitions...
+* **JSON**: Vue i18n files
+* **XML**: XSLT, XSD
+
+|===
+
+
+== Internal DSLs
+
+[cols="60a,40a"]
+|===
+|
+
+[graphviz]
+----
+digraph G {
+
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[style=invis];
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped", fillcolor="#ffffcc"];
+D[label="Statically\ntyped",style=invis];
+}
+----
+
+
+|
+
+Subset of a dynamically typed language::
+[%step]
+* *Lisp* (historically first): Emacs Lisp, Symbolic Mathematics etc. 
+* *Ruby*: Rails, RSpec, Chef...
+* *Groovy*: Spock, Ratpack, Grails, Gradle, Jenkinsfile... 
+|===
+
+
+== Internal DSLs
+
+[cols="60a,40a"]
+|===
+|
+
+[graphviz]
+----
+digraph G {
+
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped", fillcolor="#ffffcc"];
+}
+----
+
+
+|
+
+Subset of a statically typed language::
+[%step]
+* *Scala*: Scalatest, Akka HTTP...
+* **Haskell**: Parsec
+* *Kotlin*: Kotlinx.html, Ktor, Gradle,...
+
+|===
+
+
+== Restrictions
+
+[graphviz]
+----
+digraph G {
+
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped"];
+
+
+subgraph cluster_0 {
+A; 
+
+style="filled";
+color="#a2d149";
+label="\nNo restrictions"
+labelloc="b"
+}
+
+subgraph cluster_1 {
+B; 
+
+style="invis";
+color="#ffb266";
+label="Limited\nby markup synthax";
+labelloc="b";
+}
+
+subgraph cluster_2 {
+C; 
+
+style="invis";
+color="#d1c85c";
+label="Synthax restrictions\n(weak)";
+labelloc="b";
+}
+
+subgraph cluster_3 {
+D; 
+
+style="invis";
+color="#ff6666";
+label="Synthax\nrestrictions";
+labelloc="b";
+}
+
+}
+----
+
+== Restrictions
+
+[graphviz]
+----
+digraph G {
+
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped"];
+
+
+subgraph cluster_0 {
+A; 
+
+style="filled";
+color="#a2d149";
+label="\nNo restrictions"
+labelloc="b"
+}
+
+subgraph cluster_1 {
+B; 
+
+style="invis";
+color="#ffb266";
+label="Limited\nby markup synthax";
+labelloc="b";
+}
+
+subgraph cluster_2 {
+C; 
+
+style="filled";
+color="#d1c85c";
+label="Synthax restrictions\n(weak)";
+labelloc="b";
+}
+
+subgraph cluster_3 {
+D; 
+
+style="invis";
+color="#ff6666";
+label="Synthax\nrestrictions";
+labelloc="b";
+}
+
+}
+----
+== Restrictions
+
+[graphviz]
+----
+digraph G {
+
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped"];
+
+
+subgraph cluster_0 {
+A; 
+
+style="filled";
+color="#a2d149";
+label="\nNo restrictions"
+labelloc="b"
+}
+
+subgraph cluster_1 {
+B; 
+
+style="filled";
+color="#ffb266";
+label="Limited\nby markup synthax";
+labelloc="b";
+}
+
+subgraph cluster_2 {
+C; 
+
+style="filled";
+color="#d1c85c";
+label="Synthax restrictions\n(weak)";
+labelloc="b";
+}
+
+subgraph cluster_3 {
+D; 
+
+style="invis";
+color="#ff6666";
+label="Synthax\nrestrictions";
+labelloc="b";
+}
+
+}
+----
+== Restrictions
+
+[graphviz]
+----
+digraph G {
+
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped"];
+
+
+subgraph cluster_0 {
+A; 
+
+style="filled";
+color="#a2d149";
+label="\nNo restrictions"
+labelloc="b"
+}
+
+subgraph cluster_1 {
+B; 
+
+style="filled";
+color="#ffb266";
+label="Limited\nby markup synthax";
+labelloc="b";
+}
+
+subgraph cluster_2 {
+C; 
+
+style="filled";
+color="#d1c85c";
+label="Synthax restrictions\n(weak)";
+labelloc="b";
+}
+
+subgraph cluster_3 {
+D; 
+
+style="filled";
+color="#ff6666";
+label="Synthax\nrestrictions";
+labelloc="b";
+}
+
+}
+----
+
+
+
+== IDE support 
+
+[graphviz]
+----
+digraph G {
+
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped"];
+
+subgraph cluster_0 {
+A; 
+
+style="filled"
+color="#ff6666"
+label="\nNo support"
+labelloc="b"
+}
+
+subgraph cluster_1 {
+B; 
+
+style="invis"
+color="#d1c85c"
+label="Schema-based\nsupport"
+labelloc="b"
+}
+
+subgraph cluster_2 {
+C; 
+
+style="invis"
+color="#ffb266"
+label="Rudimentary\nsupport"
+labelloc="b"
+}
+
+subgraph cluster_3 {
+D; 
+
+style="invis"
+color="#a2d149"
+label="\nFull support"
+labelloc="b"
+}
+
+}
+----
+
+== IDE support 
+
+[graphviz]
+----
+digraph G {
+
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped"];
+
+subgraph cluster_0 {
+A; 
+
+style="filled"
+color="#ff6666"
+label="\nNo support"
+labelloc="b"
+}
+
+subgraph cluster_1 {
+B; 
+
+style="invis"
+color="#d1c85c"
+label="Schema-based\nsupport"
+labelloc="b"
+}
+
+subgraph cluster_2 {
+C; 
+
+style="filled"
+color="#ffb266"
+label="Rudimentary\nsupport"
+labelloc="b"
+}
+
+subgraph cluster_3 {
+D; 
+
+style="invis"
+color="#a2d149"
+label="\nFull support"
+labelloc="b"
+}
+
+}
+----
+
+== IDE support 
+
+[graphviz]
+----
+digraph G {
+
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped"];
+
+subgraph cluster_0 {
+A; 
+
+style="filled"
+color="#ff6666"
+label="\nNo support"
+labelloc="b"
+}
+
+subgraph cluster_1 {
+B; 
+
+style="filled"
+color="#d1c85c"
+label="Schema-based\nsupport"
+labelloc="b"
+}
+
+subgraph cluster_2 {
+C; 
+
+style="filled"
+color="#ffb266"
+label="Rudimentary\nsupport"
+labelloc="b"
+}
+
+subgraph cluster_3 {
+D; 
+
+style="invis"
+color="#a2d149"
+label="\nFull support"
+labelloc="b"
+}
+
+}
+----
+
+== IDE support 
+
+[graphviz]
+----
+digraph G {
+
+graph [ fontname="Sans"; dpi = 180 ];
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->A[];
+External->B[];
+Internal[];
+Internal->C[];
+Internal->D[]
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped"];
+
+subgraph cluster_0 {
+A; 
+
+style="filled"
+color="#ff6666"
+label="\nNo support"
+labelloc="b"
+}
+
+subgraph cluster_1 {
+B; 
+
+style="filled"
+color="#d1c85c"
+label="Schema-based\nsupport"
+labelloc="b"
+}
+
+subgraph cluster_2 {
+C; 
+
+style="filled"
+color="#ffb266"
+label="Rudimentary\nsupport"
+labelloc="b"
+}
+
+subgraph cluster_3 {
+D; 
+
+style="filled"
+color="#a2d149"
+label="\nFull support"
+labelloc="b"
+}
+
+}
+----
+
+
+== Security Concerns
+
+[graphviz]
+----
+digraph G {
+
+graph [ fontname="Sans"; dpi = 180 ];
+ordering="out";
+
+node[fontname="Sans",shape="block",style="rounded,filled", fillcolor="#ffffff"]
+DSLs;
+DSLs->External;
+DSLs->Internal[];
+External->B[];
+External->A[];
+Internal[];
+Internal->C[];
+Internal->D[];
+A[label="Designed\nfrom scratch"];
+B[label="Based\non JSON/YAML/XML"];
+C[label="Dynamically\ntyped"];
+D[label="Statically\ntyped"];
+
+subgraph cluster_0 {
+  A;
+  B;
+  style="filled";
+  color="#a2d149";
+  label="NOT an executable code*";
+  labelloc="b";
+}
+
+subgraph cluster_1 {
+  C;
+  D;
+  style="filled";
+  color="#ff6666";
+  label="Executable code";
+  labelloc="b";
+}
+
+}
+
+
+----
+
+&ast; Does not mean that you are safe, e.g. google for https://en.wikipedia.org/wiki/Billion_laughs_attack["Billion_laughs_attack"].
+
+== Interim Conclusions
+
+* Kotlin DSLs belong to the class of internal DSLs based on statically typed programming languages
+* This has both advantages and disadvantages
+* The choice is yours!
+
+== How do we build Kotlin DSL?
+
+[cols="30a,70a"]
+|===
+|
+image::jemerov-kotlin.png[]
+|
+*Dmitry Zhemerov, Svetlana Isakova* +
+Kotlin in Action +
+(2nd edition)
+
+|===
+
+
+== How do we build Kotlin DSL?
+
+
+image::arkhipov.jpg[{image-30-width}]
+
+
+* *Anton Arhipov* +
+Kotlin DSL in under an hour +
+https://www.youtube.com/watch?v=0DJqr4FZ6f0
+
+
+== Kotlin language features for DSL building
+
+[cols="30a,35a,35a"]
+|===
+| Tool	| DSL syntax | General syntax
+| Extension functions
+| 
+[source,kotlin]
+----
+mylist.first(); 
+/* there isn’t first() method
+in mylist collection*/
+----
+| 
+[source,kotlin]
+ListUtlis.first(mylist)
+
+| Infix functions
+| 
+[source,kotlin]
+1 to "one"
+| 
+[source,kotlin]
+1.to("one")
+| Operators overloading
+| 
+[source,kotlin]
+collection += element
+| 
+[source,kotlin]
+collection.add(element)
+| Type aliases
+| 
+[source,kotlin]
+typealias Point = Pair
+| Creating empty inheritors classes and other duct tapes
+|===
+
+== Kotlin language features for DSL building (continued)
+
+
+[cols="30a,35a,35a"]
+|===
+| Tool	| DSL syntax | General syntax
+| get/set methods convention
+| 
+[source,kotlin]
+map["key"] = "value"
+| 
+[source,kotlin]
+map.put("key", "value")
+| Destructuring declaration
+| 
+[source,kotlin]
+val (x, y) = Point(0, 0)
+| 
+[source,kotlin]
+----
+val p = Point(0, 0)
+val x = p.first 
+val y = p.second
+----
+| Lambda out of parentheses
+| 
+[source,kotlin]
+list.forEach { ... }
+| 
+[source,kotlin]
+list.forEach({...})
+| *Lambda with receiver* (the main tool)
+| 
+[source,kotlin]
+Person().apply { name = "John" }
+| N/A
+| Context control
+| 
+[source,kotlin]
+@DslMarker
+| N/A
+|===
+
+== Demo time!
+
+* Our domain:
+** Conditions
+** Transformations
+** Rules
+* If a set of conditions is met, the necessary transformation is triggered
+
+== Initial State: Imperative Code
+
+[source,kotlin]
+----
+fun main() {
+    if (conditionOneMet() && conditionTwoMet()) {
+        runTransformationA()
+    } else if ((ConditionIII.met() || ConditionIV.met()) && conditionOneMet()) {
+        runTransformationB()
+    } else if (conditionTwoMet()) {
+        runTransformationC()
+    }
+}
+----
+
+* Step-by-step debugging!
+* Testing with an eye on coverage (although substituting `conditionXmet()` and `runTransformationX()` with mocks may be challenging)
+* The code grows and quickly becomes difficult to read/maintain
+
+== Class model
+
+[plantuml]
+----
+@startuml
+skinparam dpi 180
+left to right direction
+interface Element {
+  visit(visitor)
+}
+
+interface Condition{
+fun met(): Boolean
+}
+class Rule
+interface Transformation {
+run()
+}
+
+
+Element <|-- Condition
+Element <|-- Rule
+Element <|-- Transformation
+
+Rule --> Condition
+Rule --> Transformation
+
+class Not {
+ a: Condition
+}
+class And {
+ a: Condition
+ b: Condition
+}
+
+Condition <|-- And
+Condition <|-- Not
+@enduml
+----
+
+== "Strategy" Pattern, Declarative Code
+
+[source,kotlin]
+----
+private fun rules(): List<Rule> = listOf(
+    Rule(ConditionII, TransformationC),
+    Rule(Not(ConditionIV), TransformationB),
+    Rule(And(ConditionI, ConditionII), TransformationA),
+    Rule(Or(And(ConditionIII, ConditionIV), ConditionI), TransformationB)
+)
+
+
+fun main() {
+    rules()
+        .firstOrNull { it.condition.met() }
+        ?.transformation?.run()
+}
+----
+
+* This can be written in Java, but it turned out more compact in Kotlin due to the absence of `new`.
+* The visual connection between rules and transformations is perceived better
+* Step-by-step debugging has turned into a nightmare
+
+==  Kotlin DSL in All Its Glory
+
+[source,kotlin]
+----
+val rules: List<Rule> =
+    // @formatter:off
+    rules {
+        ConditionI and ConditionIV         invokes TransformationA
+        ConditionII                        invokes TransformationC
+        not(ConditionIV)                   invokes TransformationB
+        (ConditionI and not(ConditionIII)) invokes TransformationA
+        (ConditionIII
+                and ConditionIV
+                or ConditionI)             invokes TransformationB
+    }
+   // @formatter:on
+----
+
+* The method parameter `rules` is a lambda with a receiver
+* `and`, `or`, `not`, `invokes` are infix extension functions
+
+== Execution
+
+[source,kotlin]
+----
+fun main() {
+    rules.firstOrNull { it.condition.met() }?.transformation?.run()
+}
+----
+
+* Advantage: all the code is a one-liner
+* Disadvantage: step-by-step debugging is impossible (but this can be compensated, see below)
+
+== Visualization: Transpilation to DOT
+
+[source,kotlin]
+----
+for (rule in rules) {
+    rule.visit(::visitor)
+}
+
+class Rule(...) : Element {
+    override fun visit(visitor: (Element) -> Unit) {
+        condition.visit(visitor)
+        transformation.visit(visitor)
+        visitor.invoke(this)
+    }
+}
+    
+----
+
+== Intricacies of Rules and Transformations
+
+[graphviz]
+----
+digraph G {
+graph [ fontname="Sans"; dpi = 180 ];
+node [fontname = "Sans"];
+  N1[label="ConditionI",shape="box",style="rounded"];
+  N2[label="ConditionIV",shape="box",style="rounded"];
+  N3[label="And"];
+  N1->N3;
+  N2->N3;
+  N4[label="TransformationA",shape="box",style="rounded"];
+  N3->N4;
+  N6[label="ConditionII",shape="box",style="rounded"];
+  N7[label="TransformationC",shape="box",style="rounded"];
+  N6->N7;
+  N10[label="Not"];
+  N2->N10;
+  N11[label="TransformationB",shape="box",style="rounded"];
+  N10->N11;
+  N14[label="ConditionIII",shape="box",style="rounded"];
+  N15[label="Not"];
+  N14->N15;
+  N16[label="And"];
+  N1->N16;
+  N15->N16;
+  N16->N4;
+  N21[label="And"];
+  N14->N21;
+  N2->N21;
+  N23[label="Or"];
+  N21->N23;
+  N1->N23;
+  N23->N11;
+  {rank="same";N4;N7;N11;}
+  {rank="same";N1;N2;N6;N14;}
+}
+
+----
+
+== Documentation: Transpilation to Asciidoctor
+
+image::asciidoctor.png[{image-70-width}]
+
+
+== Serialization
+
+* "Almost free" representation of DSL in JSON/YAML/XML formats using tools like FasterXML Jackson.
+* Ideal for building WebUI with forms for displaying/editing settings (projectional editors)
+
+[source,yaml]
+----
+- condition:
+    And:
+      a:
+        ConditionI: {}
+      b:
+        ConditionIV: {}
+  transformation:
+    TransformationA: {}
+----
+
+== Testing complex restrictions
+
+Code that generates 2^N^ combinations of sets of fulfilled conditions, +
+where N is the number of subclasses of `BasicCondition`
+
+[source,kotlin]
+----
+private val conditions = BasicCondition::class.sealedSubclasses
+fun outcomes(): Sequence<Set<ConditionClass>> = sequence {
+    for (i in 0L until (1L shl conditions.size)) { // тут возникает 2^N
+        val activeConditions = mutableSetOf<ConditionClass>()
+        for (j in 0 until conditions.size) {
+            if ((i and (1L shl j)) != 0L) {
+                activeConditions.add(conditions[j])
+            }
+        }
+        yield(activeConditions)
+    }
+}
+----
+
+== Model Consistency Check
+
+* "There are no unreachable rules"
+* "For a fixed condition, every rule of a certain class is achievable"
+* ... etc. — it all depends on your task
+
+We test the model itself, defined in the DSL, not the result of its interpretation!
+
+== One source to be used in
+ 
+. Execution of rules
+. Documentation
+. Visualization
+. Validation
+. Serialization ("free" JSON/YAML based DSL version for our Kotlin DSL)
+
+== Advanced topics of DSL building
+
+////
+== Смешиваем DSL и императивный код
+
+
+[source,kotlin]
+----
+// "Точка расширения" в билдере
+fun customCondition(lambda: () -> Boolean): Condition =
+    Condition(lambda)
+        
+// Использование точки расширения в нашем DSL
+customCondition { Random.nextDouble() < .88} invokes TransformationC
+
+
+// В каком-то другом DSL
+customBusinessRule { checkSmthProgramatically() }
+----
+
+== Смешиваем DSL и императивный код
+
+
+[%step]
+* Отлично подходит для описания бизнес-правил (например, модели переходов состояний), особенно в ситуации, где DSL способна выразить только часть правил.
+* В зависимости от обстоятельств, может быть как желательной, так и нежелательной практикой
+* В комбинации с KotlinScript (см. доклад "Kotlin Script: why, how, for whom?") создаёт возможность скриптования для вашего приложения 
+
+////
+
+== Annoying Kotlin limitation
+
+Groovy Gradle DSL:
+
+[source,groovy]
+implementation 'com.acme:example:1.0'
+
+Kotlin Gradle DSL:
+
+[source,kotlin]
+implementation ("com.acme:example:1.0")
+
+== Infix Functions Do Not Work on `this`
+
+[source,kotlin]
+----
+val jpoint = javaConference {
+    //Cannot be used without parentheses (unlike Groovy)
+    talk("Writing an application with Ktor") deliveredBy {
+        speaker("Alexander Nozik")
+        speaker("Gleb Korolkevich")
+    }
+
+    talk("One source to rule them all: Kotlin DSL") deliveredBy {
+        speaker("Ivan Ponomarev")
+    } withExperts {
+        speaker("Andrey Kuleshov")
+    }
+}
+----
+
+
+
+== Infix Functions Do Not Work on `this`: +++<br/>+++a workaround
+
+[source,kotlin]
+----
+val jpoint = javaConference {
+    // All without parentheses (but also without a meaningful method name)
+    + "Writing an application with Ktor" deliveredBy {
+        + "Alexander Nozik"
+        + "Gleb Korolkevich"
+    }
+
+    + "One source to rule them all: Kotlin DSL") deliveredBy {
+        + "Ivan Ponomarev"
+    } withExperts {
+        + "Andrey Kuleshov"
+    }
+}
+----
+
+== @DslMarker
+
+For the DSL we wouldn't want this, but a lambda with a receiver does not prohibit it:
+
+[source,kotlin]
+----
+javaConference { //this: ConferenceBuilder
+    talk ("Talk 1") deliveredBy { 
+        //this: ConferenceBuilder.SpeakersBuilder,
+        //but methods from ConferenceBuilder are also available
+        talk (...) // ???!!!
+    }
+}
+----
+
+== @DslMarker
+
+[source,kotlin]
+----
+@DslMarker
+annotation class MeetupDsl
+
+@MeetupDsl
+class MeetupBuilder { ... } 
+
+@MeetupDsl
+class SpeakersBuilder { ... }
+----
+
+* Extended IDE support is promised (though not documented), so it makes sense to annotate DSL builders with @DslMarker in any case.
+
+== Cross references
+
+[source,kotlin]
+----
+private val jpoint = javaConference {
+
+    val ip = Speaker("Ivan Ponomarev", "N/A")
+
+    talk("One source to rule them all: Kotlin DSL") deliveredBy {
+        + ip
+    } withExperts {
+        + Speaker("Andrey Kuleshov", "Huawei")
+    }
+
+    talk("Kotlin Script: why, how, for whom?") deliveredBy {
+        + Speaker("Anatoly Nechay-Gumen", "Centr-invest bank")
+    } withExperts {
+        + ip
+    }
+
+}
+----
+
+* `val ip = ...`  looks like imperative code, but there's nothing to be done about it.
+* Groovy offers much more possibilities here.
+
+== Capturing the variable name through delegation
+
+[source,kotlin]
+----
+//ConferenceBuilder
+val speakers = mutableMapOf<String, Speaker>()
+//The function returns a delegate for a read-only property
+fun speaker(name: String, company: String): ReadOnlyProperty<Nothing?, Speaker> =
+    ReadOnlyProperty { _, property ->
+        //property.name contains the variable's name
+        speakers.computeIfAbsent(property.name) { Speaker(it, name, company) }
+    }
+
+----
+
+== Capturing the variable name through delegation
+
+[source,kotlin]
+----
+//The language syntax itself will ensure the uniqueness of identifiers
+val an by speaker("Alexander Nozik", "МФТИ")
+val gk by speaker("Gleb Korolkevich", "Хоум Банк")
+
+talk("Writing an application with Ktor") deliveredBy {
+    +an
+    +gk
+}
+
+----
+
+== Examples for your inspiration
+
+* Gradle Kotlin DSL
+* Ktor Framework: https://ktor.io/
+* Exposed (an ORM for Kotlin): https://github.com/JetBrains/Exposed?tab=readme-ov-file#examples
+
+== Conclusions
+
+[%step]
+* DSL combined with design patterns is a powerful tool for solving multiple tasks.
+* Creating DSLs in Kotlin is not scary. You can improve parts of your existing internal APIs today making them "DSL-like".
+* Internal Kotlin DSLs are not the only way to implement DSLs, but definitely not the worst one in many scenarious.
+
+== Thanks for listening!
+
+[cols="40a,60a"]
+|===
+|
+image::qr.svg[{image-40-width}]
+
+Code and slides are available on GitHub
+https://github.com/inponomarev/dsl-talk
+
+|
+
+
+
+icon:envelope[size=lg] ivan@synthesized.io
+
+icon:twitter[size=lg] @inponomarev
+|===
