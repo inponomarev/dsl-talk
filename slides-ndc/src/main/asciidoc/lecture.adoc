@@ -961,7 +961,7 @@ fun main() {
 ----
 
 * This can be written in Java, but it turned out more compact in Kotlin due to the absence of `new`.
-* The visual connection between rules and transformations is perceived better
+* The visual connection between rules and transformations is now obvious
 * Step-by-step debugging has turned into a nightmare
 
 ==  Kotlin DSL in All Its Glory
@@ -1236,14 +1236,12 @@ val ndcCopenhagen = conference {
     session("One Source to Rule Them All: Kotlin DSLs") deliveredBy {
         +ip
     } inRoom "Room 6"
-
     session("Part 1/2: Introduction to capture the flag (CTF)") deliveredBy {
         +mj
-    } inRoom ("Room 4")
-
+    } inRoom "Room 4"
     session("Part 2/2: Introduction to capture the flag (CTF)") deliveredBy {
         +mj
-    } inRoom ("Room 4")
+    } inRoom "Room 4"
 }
 ----
 
