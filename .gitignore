@@ -22,4 +22,5 @@ src/main/asciidoc/*.png
 .asciidoctor
 slides/src/main/asciidoc/images/diag-*.png
 slides-jpoint/src/main/asciidoc/images/diag-*.png
+slides-ndc/src/main/asciidoc/images/diag-*.png
 *.bak
