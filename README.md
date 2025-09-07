@@ -5,3 +5,4 @@
 
 * [Brighton Slides](https://inponomarev.github.io/dsl-talk/slides/#/)
 * [JPoint Slides](https://inponomarev.github.io/dsl-talk/slides-jpoint/#/)
+* [NDC Copenhagen Slides](https://inponomarev.github.io/dsl-talk/slides-ndc/#/)
