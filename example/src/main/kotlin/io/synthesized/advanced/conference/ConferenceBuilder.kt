@@ -34,6 +34,7 @@ class ConferenceBuilder {
     }
 
     operator fun String.unaryPlus() = session(this)
+
     infix fun Talk.deliveredBy(action: SpeakersBuilder.() -> Unit): Talk {
         val builder = SpeakersBuilder()
         builder.action()

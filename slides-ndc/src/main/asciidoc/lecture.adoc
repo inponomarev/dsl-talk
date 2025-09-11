@@ -1311,6 +1311,8 @@ return builder.talks;
 
 == Examples for your inspiration
 
+* https://github.com/redundent/kotlin-xml-builder
+* https://ajalt.github.io/clikt/ (DSL for command line parameters parsing)
 * Gradle Kotlin DSL
 * Ktor Framework: https://ktor.io/
 * Koog AI https://docs.koog.ai/
