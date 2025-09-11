@@ -12,7 +12,7 @@ import io.synthesized.dsl.element.TransformationC
 fun main() {
     if (conditionOneMet() && conditionTwoMet()) {
         runTransformationA()
-    } else if ((ConditionIII.met() || ConditionIV.met()) && conditionOneMet()) {
+    } else if ((conditionThreeMet() || conditionFourMet()) && conditionOneMet()) {
         runTransformationB()
     } else if (conditionTwoMet()) {
         runTransformationC()
@@ -43,5 +43,7 @@ fun main() {
 private fun runTransformationC() = TransformationC.run()
 private fun runTransformationB() = TransformationB.run()
 private fun runTransformationA() = TransformationA.run()
-private fun conditionTwoMet() = ConditionII.met()
 private fun conditionOneMet() = ConditionI.met()
+private fun conditionTwoMet() = ConditionII.met()
+private fun conditionThreeMet() = ConditionIII.met()
+private fun conditionFourMet() = ConditionIII.met()

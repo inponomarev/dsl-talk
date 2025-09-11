@@ -1,4 +1,7 @@
-package io.synthesized.advanced.conference
+package io.synthesized.advanced.conferenceinvoke
+
+import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KProperty
 
 data class Talk(
     val name: String,
@@ -8,9 +11,9 @@ data class Talk(
 
 data class Room(val name: String)
 
-data class Speaker(val name: String)
+data class Speaker(val id: String, val name: String, val company: String)
 
-//@DslMarker
+@DslMarker
 annotation class ConferenceDsl
 
 @ConferenceDsl
@@ -18,11 +21,11 @@ class ConferenceBuilder {
     @ConferenceDsl
     class SpeakersBuilder {
         val speakers = mutableListOf<Speaker>()
-        infix fun speaker(name: String) = Speaker(name).also {
+        fun speaker(speaker: Speaker) = speaker.also {
             speakers.add(it)
         }
 
-        operator fun String.unaryPlus() = speaker(this)
+        operator fun Speaker.unaryPlus() = speaker(this)
     }
 
     val talks = mutableListOf<Talk>()
@@ -49,10 +52,21 @@ class ConferenceBuilder {
         talks.add(newTalk)
         return newTalk
     }
+
+    val speakers = mutableMapOf<String, Speaker>()
+    fun speaker(name: String, company: String): ReadOnlyProperty<Any?, Speaker> =
+        ReadOnlyProperty { _, property: KProperty<*> ->
+            speakers.computeIfAbsent(property.name) { Speaker(it, name, company) }
+        }
+
 }
 
-fun conference(action: ConferenceBuilder.() -> Unit): List<Talk> {
-    val builder = ConferenceBuilder()
-    builder.action()
-    return builder.talks;
+object conference {
+    operator fun invoke(action: ConferenceBuilder.() -> Unit): List<Talk> {
+        val builder = ConferenceBuilder()
+        builder.action()
+        return builder.talks;
+    }
+
+    var name: String = ""
 }

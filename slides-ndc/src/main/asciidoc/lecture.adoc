@@ -51,7 +51,9 @@ Ivan Ponomarev
 
 == NOT in this talk
 
+[%step]
 * Basics of creating Kotlin DSL (but there will be references to relevant sources)
+* This talk is AI free!
 
 == DSLs external and internal
 
@@ -146,7 +148,6 @@ D[label="Statically\ntyped", style=invis]
 Based on general purpose markup language::
 [%step]
 * **YAML**: OpenAPI, Ansible, GithubActions, k8s definitions...
-* **JSON**: Vue i18n files
 * **XML**: XSLT, XSD
 
 |===
@@ -224,7 +225,7 @@ Subset of a statically typed language::
 [%step]
 * *Scala*: Scalatest, Akka HTTP...
 * **Haskell**: Parsec
-* *Kotlin*: Kotlinx.html, Ktor, Gradle,...
+* *Kotlin*: Kotlinx.html, Ktor, Gradle, Koog...
 
 |===
 
@@ -889,7 +890,7 @@ Person().apply { name = "John" }
 fun main() {
     if (conditionOneMet() && conditionTwoMet()) {
         runTransformationA()
-    } else if ((ConditionIII.met() || ConditionIV.met()) && conditionOneMet()) {
+    } else if ((ConditionThreeMet() || ConditionFourMet()) && conditionOneMet()) {
         runTransformationB()
     } else if (conditionTwoMet()) {
         runTransformationC()
@@ -1005,7 +1006,9 @@ for (rule in rules) {
     rule.visit(::visitor)
 }
 
-class Rule(...) : Element {
+class Rule(
+    val condition: Condition,
+    val transformation: Transformation) : Element {
     override fun visit(visitor: (Element) -> Unit) {
         condition.visit(visitor)
         transformation.visit(visitor)
@@ -1276,6 +1279,35 @@ session("Edge-native applications - what happened to cloud-native?") deliveredBy
         +th
     } inRoom "Room 3"
 ----
+
+== Invoke operator
+
+Classic pattern
+
+```kotlin
+fun verb(action: EntityBuilder.()->Unit) {
+   val builder = EntityBuilder()
+   builder.action()
+   ...
+}
+```
+
+allows `verb { ...action... }` but not `verb.property = value`
+
+== Invoke operator
+
+```kotlin
+object conference {
+   //The default method with a lambda parameter
+    operator fun invoke(action: ConferenceBuilder.() -> Unit): List<Talk> {
+val builder = ConferenceBuilder()
+builder.action()
+return builder.talks;
+}
+    //additional properties
+    var name: String = ""
+}
+```
 
 == Examples for your inspiration
 
